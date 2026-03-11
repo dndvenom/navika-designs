@@ -7,6 +7,7 @@ const galleryButtons = document.querySelectorAll(".gallery-item");
 const lightbox = document.querySelector(".lightbox");
 const lightboxImage = document.querySelector(".lightbox-image");
 const lightboxClose = document.querySelector(".lightbox-close");
+const externalLinks = document.querySelectorAll("[data-external-link]");
 
 const setHeaderState = () => {
     header.classList.toggle("scrolled", window.scrollY > 18);
@@ -79,7 +80,31 @@ lightbox?.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
-        closeLightbox();
+  if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
+    closeLightbox();
+  }
+});
+
+externalLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const href = link.getAttribute("href");
+    const kind = link.dataset.linkKind;
+
+    if (!href) {
+      return;
     }
+
+    if (kind === "mailto") {
+      window.location.href = href;
+      return;
+    }
+
+    const newWindow = window.open(href, "_blank", "noopener,noreferrer");
+
+    if (!newWindow) {
+      window.location.href = href;
+    }
+  });
 });
